@@ -29,8 +29,11 @@ const REMOVED_TEXTS = [
 // 処理済みのメールに付けるラベル名
 const PROCESSED_LABEL = "UTOL_転送済";
 
-// 件名に付けるプレフィックス
+// 転送時の件名
 const FOWARD_SUBJECT = "UTOL通知転送";
+
+// 転送時のアカウント名
+const FOWARD_NAME = "UTOL通知転送";
 
 // 連続する空白行をどう扱うか
 //   true  : 空白行をすべて削除する
@@ -76,7 +79,7 @@ function forwardFilteredEmails() {
         {
           htmlBody: htmlBody,
           attachments: attachments,
-          name: "UTOL通知転送",
+          name: FOWARD_NAME,
         }
       );
     }
