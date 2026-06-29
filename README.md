@@ -1,0 +1,2 @@
+# FowardNotificationFromUTOL
+GASUTOLから届いた更新通知の不要な行を削除して自分宛に転送するスクリプト
