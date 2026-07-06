@@ -35,6 +35,9 @@ const FOWARD_SUBJECT = "UTOL通知転送";
 // 転送時のアカウント名
 const FOWARD_NAME = "UTOL通知転送";
 
+// トリガーに設定する時間間隔(分)
+const Trigger_Time = 10;
+
 // 連続する空白行をどう扱うか
 //   true  : 空白行をすべて削除する
 //   false : 空白行は1行までにまとめる（完全には消さない）
@@ -49,12 +52,21 @@ function forwardFilteredEmails() {
   // 指定送信者からの、まだ処理していないメールを検索
   const query =
     'from:"' + SENDER_EMAIL + '" -label:"' + PROCESSED_LABEL + '"';
-  const threads = GmailApp.search(query, 0, 20); // 一度に最大50スレッド
+
+  // 現在時刻から"Trigger_Time+2"分前のタイムスタンプ
+  const Trigger_Time_MS = (Trigger_Time + 2) * 60 * 1000; 
+  const cutoff = new Date(Date.now() - Trigger_Time_MS);
+
+  const threads = GmailApp.search(query, 0, 20); // 一度に最大20スレッド
 
   for (const thread of threads) {
     const messages = thread.getMessages();
 
     for (const message of messages) {
+      // 受信時刻がcutoffより古い場合はスキップ
+      if (message.getDate() < cutoff) continue;
+
+      // 本文を取得
       let plainBody = message.getPlainBody();
       let htmlBody = message.getBody(); // HTML本文
       // Logger.log(htmlBody);
